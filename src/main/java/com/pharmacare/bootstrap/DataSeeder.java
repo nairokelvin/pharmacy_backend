@@ -44,6 +44,8 @@ public class DataSeeder implements CommandLineRunner {
                 "module.sales",
                 "module.inventory",
                 "module.suppliers",
+                "module.expenses",
+                "module.profit",
                 "module.prescriptions",
                 "module.reports",
                 "module.users",
@@ -61,6 +63,11 @@ public class DataSeeder implements CommandLineRunner {
                 "action.inventory.adjust_stock.apply",
                 "action.sales.create",
                 "action.suppliers.manage",
+                "action.expenses.view",
+                "action.expenses.create",
+                "action.expenses.edit",
+                "action.expenses.delete",
+                "action.profit.view",
                 "action.prescriptions.upload",
                 "action.prescriptions.delete",
                 "action.reports.view",
@@ -107,6 +114,7 @@ public class DataSeeder implements CommandLineRunner {
         if (role == Role.CASHIER) {
             if ("module.sales".equals(key)) canView = true;
             if ("module.inventory".equals(key)) canView = true;
+            if ("module.expenses".equals(key)) canView = true;
 
             if ("inventory.medicines".equals(key)) canView = true;
             if ("inventory.low_stock".equals(key)) canView = true;
@@ -116,12 +124,17 @@ public class DataSeeder implements CommandLineRunner {
                 canView = true;
                 canCreate = true;
             }
+            if ("action.expenses.view".equals(key)) {
+                canView = true;
+            }
         }
 
         if (role == Role.PHARMACIST) {
             if ("module.inventory".equals(key)) canView = true;
             if ("module.prescriptions".equals(key)) canView = true;
             if ("module.reports".equals(key)) canView = true;
+            if ("module.expenses".equals(key)) canView = true;
+            if ("module.profit".equals(key)) canView = true;
 
             if (key.startsWith("inventory.")) canView = true;
 
@@ -137,6 +150,24 @@ public class DataSeeder implements CommandLineRunner {
                 canView = true;
                 canUpdate = true;
             }
+            if ("action.expenses.view".equals(key)) {
+                canView = true;
+            }
+            if ("action.expenses.create".equals(key)) {
+                canView = true;
+                canCreate = true;
+            }
+            if ("action.expenses.edit".equals(key)) {
+                canView = true;
+                canUpdate = true;
+            }
+            if ("action.expenses.delete".equals(key)) {
+                canView = true;
+                canDelete = true;
+            }
+            if ("action.profit.view".equals(key)) {
+                canView = true;
+            }
             if ("action.prescriptions.upload".equals(key)) {
                 canView = true;
                 canCreate = true;
@@ -150,6 +181,8 @@ public class DataSeeder implements CommandLineRunner {
             if ("module.inventory".equals(key)) canView = true;
             if ("module.suppliers".equals(key)) canView = true;
             if ("module.reports".equals(key)) canView = true;
+            if ("module.expenses".equals(key)) canView = true;
+            if ("module.profit".equals(key)) canView = true;
 
             if (key.startsWith("inventory.")) canView = true;
 
@@ -169,6 +202,24 @@ public class DataSeeder implements CommandLineRunner {
                 canView = true;
                 canCreate = true;
                 canUpdate = true;
+            }
+            if ("action.expenses.view".equals(key)) {
+                canView = true;
+            }
+            if ("action.expenses.create".equals(key)) {
+                canView = true;
+                canCreate = true;
+            }
+            if ("action.expenses.edit".equals(key)) {
+                canView = true;
+                canUpdate = true;
+            }
+            if ("action.expenses.delete".equals(key)) {
+                canView = true;
+                canDelete = true;
+            }
+            if ("action.profit.view".equals(key)) {
+                canView = true;
             }
             if ("action.reports.view".equals(key)) {
                 canView = true;

@@ -30,19 +30,19 @@ public class RolePermissionController {
 
     @GetMapping("/{role}")
     @PreAuthorize("hasRole('ADMIN')")
-    public List<PermissionDto> list(@PathVariable Role role) {
+    public List<PermissionDto> list(@PathVariable("role") Role role) {
         return service.list(role);
     }
 
     @PutMapping("/{role}")
     @PreAuthorize("hasRole('ADMIN')")
-    public List<PermissionDto> replace(@PathVariable Role role, @Valid @RequestBody List<UpsertPermissionRequest> items) {
+    public List<PermissionDto> replace(@PathVariable("role") Role role, @Valid @RequestBody List<UpsertPermissionRequest> items) {
         return service.replace(role, items);
     }
 
     @PostMapping("/{role}")
     @PreAuthorize("hasRole('ADMIN')")
-    public PermissionDto upsert(@PathVariable Role role, @Valid @RequestBody UpsertPermissionRequest item) {
+    public PermissionDto upsert(@PathVariable("role") Role role, @Valid @RequestBody UpsertPermissionRequest item) {
         return service.upsert(role, item);
     }
 

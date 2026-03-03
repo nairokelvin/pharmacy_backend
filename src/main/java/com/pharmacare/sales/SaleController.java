@@ -23,7 +23,7 @@ public class SaleController {
     @GetMapping
     @PreAuthorize("hasAnyRole('ADMIN','CASHIER','PHARMACIST','STORE_MANAGER')")
     public List<Sale> list() {
-        return sales.findAll();
+        return sales.findAllByOrderByCreatedAtDesc();
     }
 
     @GetMapping("/{id}")

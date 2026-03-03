@@ -39,6 +39,15 @@ public class ReportController {
         return new SalesSummary(d.toString(), list.size(), total);
     }
 
+    @GetMapping("/daily-sales-detail")
+    @PreAuthorize("hasAnyRole('ADMIN','STORE_MANAGER')")
+    public List<Sale> dailySalesDetail(@RequestParam(name = "date", required = false) LocalDate date) {
+        LocalDate d = date == null ? LocalDate.now() : date;
+        Instant from = d.atStartOfDay(ZoneId.systemDefault()).toInstant();
+        Instant to = d.plusDays(1).atStartOfDay(ZoneId.systemDefault()).toInstant();
+        return sales.findByCreatedAtBetweenOrderByCreatedAtDesc(from, to);
+    }
+
     @GetMapping("/monthly-sales")
     @PreAuthorize("hasAnyRole('ADMIN','STORE_MANAGER')")
     public SalesSummary monthlySales(@RequestParam(name = "year") int year, @RequestParam(name = "month") int month) {
@@ -49,6 +58,34 @@ public class ReportController {
         List<Sale> list = sales.findByCreatedAtBetween(from, to);
         BigDecimal total = list.stream().map(Sale::getTotalAmount).reduce(BigDecimal.ZERO, BigDecimal::add);
         return new SalesSummary(year + "-" + String.format("%02d", month), list.size(), total);
+    }
+
+    @GetMapping("/monthly-sales-detail")
+    @PreAuthorize("hasAnyRole('ADMIN','STORE_MANAGER')")
+    public List<Sale> monthlySalesDetail(@RequestParam(name = "year") int year, @RequestParam(name = "month") int month) {
+        LocalDate start = LocalDate.of(year, month, 1);
+        LocalDate end = start.plusMonths(1);
+        Instant from = start.atStartOfDay(ZoneId.systemDefault()).toInstant();
+        Instant to = end.atStartOfDay(ZoneId.systemDefault()).toInstant();
+        return sales.findByCreatedAtBetweenOrderByCreatedAtDesc(from, to);
+    }
+
+    @GetMapping("/date-range-sales")
+    @PreAuthorize("hasAnyRole('ADMIN','STORE_MANAGER')")
+    public SalesSummary dateRangeSales(@RequestParam(name = "startDate") LocalDate startDate, @RequestParam(name = "endDate") LocalDate endDate) {
+        Instant from = startDate.atStartOfDay(ZoneId.systemDefault()).toInstant();
+        Instant to = endDate.plusDays(1).atStartOfDay(ZoneId.systemDefault()).toInstant();
+        List<Sale> list = sales.findByCreatedAtBetween(from, to);
+        BigDecimal total = list.stream().map(Sale::getTotalAmount).reduce(BigDecimal.ZERO, BigDecimal::add);
+        return new SalesSummary(startDate + " to " + endDate, list.size(), total);
+    }
+
+    @GetMapping("/date-range-sales-detail")
+    @PreAuthorize("hasAnyRole('ADMIN','STORE_MANAGER')")
+    public List<Sale> dateRangeSalesDetail(@RequestParam(name = "startDate") LocalDate startDate, @RequestParam(name = "endDate") LocalDate endDate) {
+        Instant from = startDate.atStartOfDay(ZoneId.systemDefault()).toInstant();
+        Instant to = endDate.plusDays(1).atStartOfDay(ZoneId.systemDefault()).toInstant();
+        return sales.findByCreatedAtBetweenOrderByCreatedAtDesc(from, to);
     }
 
     @GetMapping("/low-stock")

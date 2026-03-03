@@ -1,4 +1,4 @@
-package com.pharmacare.supplier;
+package com.pharmacare.expense;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
@@ -11,39 +11,46 @@ import java.time.Instant;
 @Getter
 @Setter
 @Entity
-@Table(name = "purchase_orders")
+@Table(name = "expenses")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-public class PurchaseOrder {
+public class Expense {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "supplier_id", nullable = false)
-    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-    private Supplier supplier;
+    @Column(nullable = false)
+    private String description;
 
     @Column(nullable = false, precision = 12, scale = 2)
-    private BigDecimal totalAmount;
+    private BigDecimal amount;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private PurchaseOrderStatus status;
+    private ExpenseCategory category;
 
-    @Column(nullable = false)
+    @Column(length = 500)
+    private String notes;
+
+    @Column(name = "expense_date", nullable = false)
+    private Instant expenseDate;
+
+    @Column(name = "receipt_number")
+    private String receiptNumber;
+
+    @Column(name = "created_at", nullable = false)
     private Instant createdAt;
+
+    @Column(name = "created_by")
+    private String createdBy;
 
     @PrePersist
     void prePersist() {
         if (createdAt == null) {
             createdAt = Instant.now();
         }
-        if (status == null) {
-            status = PurchaseOrderStatus.DRAFT;
-        }
-        if (totalAmount == null) {
-            totalAmount = BigDecimal.ZERO;
+        if (expenseDate == null) {
+            expenseDate = Instant.now();
         }
     }
 }

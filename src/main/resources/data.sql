@@ -4,7 +4,11 @@ INSERT INTO categories (id, name, created_at) VALUES
 (2, 'Instrument', CURRENT_TIMESTAMP)
 ON CONFLICT (id) DO NOTHING;
 
--- Insert dummy medicines with force update
+-- Reset the medicine ID sequence to avoid conflicts
+-- This sets the next ID to be higher than the maximum existing ID
+ALTER SEQUENCE IF EXISTS medicines_id_seq RESTART WITH 100;
+
+-- Insert dummy medicines with proper conflict handling
 INSERT INTO medicines (id, name, brand, category_id, batch_number, purchase_price, selling_price, selling_price_per_tablet, elements_per_package, quantity_in_stock, loose_elements_in_stock, expiry_date, barcode, created_at) VALUES 
 (1, 'Paracetamol 500mg', 'PharmaCo', 2, '001', 50.00, 75.00, 2.00, 30, 100, 15, '2024-12-31', '1234567890123', CURRENT_TIMESTAMP),
 (2, 'Amoxicillin 250mg', 'MediCorp', 2, '002', 120.00, 180.00, 6.00, 20, 50, 8, '2024-10-15', '2345678901234', CURRENT_TIMESTAMP),
@@ -22,10 +26,10 @@ INSERT INTO medicines (id, name, brand, category_id, batch_number, purchase_pric
 (14, 'Vitamin B Complex', 'EnergyPlus', 2, '014', 65.00, 95.00, 3.00, 25, 95, 14, '2024-11-25', '4455667788990', CURRENT_TIMESTAMP),
 (15, 'Thermometer Digital', 'MediDevices', 1, '015', 150.00, 220.00, NULL, NULL, 30, 0, NULL, '5566778899001', CURRENT_TIMESTAMP)
 ON CONFLICT (id) DO UPDATE SET 
-  batch_number = EXCLUDED.batch_number,
   name = EXCLUDED.name,
   brand = EXCLUDED.brand,
   category_id = EXCLUDED.category_id,
+  batch_number = EXCLUDED.batch_number,
   purchase_price = EXCLUDED.purchase_price,
   selling_price = EXCLUDED.selling_price,
   selling_price_per_tablet = EXCLUDED.selling_price_per_tablet,
